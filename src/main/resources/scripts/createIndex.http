@@ -1,0 +1,32 @@
+
+### Creates new index called movies
+PUT  http://localhost:9200/movies
+
+{
+  "settings": {
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "properties": {
+      "name": { "type": "text" },
+       "genres": { "type": "text" },
+         "year": { "type": "integer" },
+         "ranking": { "type": "integer" }
+  }
+}
+
+PUT  http://localhost:9200/movies_autosuggest
+
+{
+  "settings": {
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "properties": {
+      "name": { "type": "text" },
+      "year": { "type": "integer" },
+      "suggest_name": { "type": "completion" }
+  }
+}
+
+
