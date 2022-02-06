@@ -1,21 +1,5 @@
-
-### Creates new index called movies
-PUT  http://localhost:9200/movies
-
-{
-  "settings": {
-    "number_of_shards": 1
-  },
-  "mappings": {
-    "properties": {
-      "name": { "type": "text" },
-       "genres": { "type": "text" },
-         "year": { "type": "integer" },
-         "ranking": { "type": "integer" }
-  }
-}
-
-PUT  http://localhost:9200/movies_autosuggest
+PUT http://localhost:9200/movies_autosuggest
+Content-Type: application/json
 
 {
   "settings": {
@@ -26,7 +10,35 @@ PUT  http://localhost:9200/movies_autosuggest
       "name": { "type": "text" },
       "year": { "type": "integer" },
       "suggest_name": { "type": "completion" }
+    }
   }
 }
 
+###
+
+### Creates new index called movies
+PUT  http://localhost:9200/movies
+Content-Type: application/json
+
+{
+  "settings": {
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "text"
+      },
+      "genres": {
+        "type": "text"
+      },
+      "year": {
+        "type": "integer"
+      },
+      "ranking": {
+        "type": "integer"
+      }
+    }
+  }
+}
 

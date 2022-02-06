@@ -7,6 +7,8 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import jakarta.inject.Inject;
 
+import java.util.concurrent.CompletableFuture;
+
 @Controller("/index")
 public class IndexController {
 
@@ -14,8 +16,7 @@ public class IndexController {
     IndexService indexService;
 
     @Get("/fill")
-    public String index() throws  Exception{
-        final String res = indexService.fillIndex();
-        return "Hello World";
+    public CompletableFuture<String> index() throws Exception{
+        return indexService.fillIndex();
     }
 }

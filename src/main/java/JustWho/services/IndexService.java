@@ -1,12 +1,18 @@
 package JustWho.services;
 
+import JustWho.dto.index.Indexable;
+import JustWho.dto.index.SearchDTO;
+import JustWho.dto.index.SuggestDTO;
 import JustWho.util.Constants;
 import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
 import jakarta.inject.Inject;
+import org.elasticsearch.search.suggest.Suggest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,35 +24,30 @@ public class IndexService {
     @Inject
     ElasticsearchAsyncClient elasticsearchAsyncClient;
 
-    public String fillIndex() {
-        final Map<String, Object> searchIndexMap = new HashMap<>();
+    public CompletableFuture<String> fillIndex() throws Exception{
         final String name = "Kung Pow: Enter the Fist";
-        searchIndexMap.put("name", name);
-        searchIndexMap.put("genres", List.of("Action, Abenteuer, Comedy"));
-        searchIndexMap.put("year", 2002);
-        searchIndexMap.put("ranking", 1);
+        final int year = 2002;
+        final SearchDTO searchDTO = new SearchDTO(name, List.of("Action, Abenteuer, Comedy"), year, 44 );
+        final CompletableFuture<IndexResponse> searchIndexResponse = sendToIndex(Constants.SEARCH_INDEX, searchDTO);
 
-        try {
-            CompletableFuture<IndexResponse> indexResponseFuture = elasticsearchAsyncClient.index(
-                    indexRequest -> indexRequest.index(Constants.SEARCH_INDEX).document(searchIndexMap)
-            );
-        } catch(Exception e) {
-            LOGGER.error("Doof!", e);
-        }
+        final SuggestDTO suggestDTO = new SuggestDTO(name, year);
+        final CompletableFuture<IndexResponse> suggestIndexResponse = sendToIndex(Constants.SUGGEST_INDEX, suggestDTO);
 
-/*        final Map<String, Object> suggestIndexMap = new HashMap<>();
-        suggestIndexMap.put("name", name);
-        suggestIndexMap.put("year", 2021);
-        suggestIndexMap.put("suggest_name", name);
-
-        IndexRequest autosuggestRequest = new IndexRequest(Constants.SUGGEST_INDEX).source(suggestIndexMap);
-        IndexResponse suggestIndexResponse =  client.index(autosuggestRequest, RequestOptions.DEFAULT);
-
-        System.out.println(searchIndexResponse.status());
-        System.out.println(suggestIndexResponse.status());*/
-
-        return "";
+        return searchIndexResponse
+                .thenCombine(suggestIndexResponse, (a, b) -> a.result().toString() + " " + b.result().toString());
     }
 
+    private CompletableFuture<IndexResponse> sendToIndex(final String indexName, final Indexable dto) throws IOException {
+        try {
+            return elasticsearchAsyncClient.index(
+                    indexRequest -> indexRequest.index(indexName).id(dto.getId()).document(dto));
+
+        } catch (Exception e) {
+            LOGGER.error("An exception occurred during indexing: " + dto.toString() + "Stacktrace: " + Arrays.toString(e.getStackTrace()));
+            throw e;
+        }
+
+
+    }
 
 }
