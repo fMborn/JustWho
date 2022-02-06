@@ -1,5 +1,6 @@
-package JustWho.dto;
+package JustWho.dto.index;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -9,8 +10,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SuggestDTO {
+public class SuggestDTO implements Indexable {
 
+    @JsonIgnore
+    final String id;
     @JsonProperty
     final String name;
     @JsonProperty
@@ -19,6 +22,7 @@ public class SuggestDTO {
     final List<String> suggestName;
 
     public SuggestDTO(String name, int year) {
+        this.id = name + year;
         this.name = name;
         this.year = year;
         this.suggestName = createSuggestName(name);
@@ -38,5 +42,10 @@ public class SuggestDTO {
     private ArrayList<String> concatElements(final List<String> list, final String elm) {
         final String lastElement = list.size() > 0 ? list.get(list.size() - 1) : "";
         return new ArrayList(List.of(elm + " " + lastElement));
+    }
+
+    @Override
+    public String getId() {
+        return this.id;
     }
 }
