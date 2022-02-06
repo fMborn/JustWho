@@ -3,6 +3,7 @@ package JustWho.services;
 import JustWho.util.Constants;
 import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
+import co.elastic.clients.transport.ElasticsearchTransport;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ public class IndexService {
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexService.class);
 
     @Inject
+    ElasticsearchTransport elasticsearchTransport;
     ElasticsearchAsyncClient elasticsearchAsyncClient;
 
     public String fillIndex() {
