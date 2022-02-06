@@ -6,6 +6,7 @@ import JustWho.dto.index.SuggestDTO;
 import JustWho.util.Constants;
 import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
+import co.elastic.clients.transport.ElasticsearchTransport;
 import jakarta.inject.Inject;
 import org.elasticsearch.search.suggest.Suggest;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ public class IndexService {
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexService.class);
 
     @Inject
+    ElasticsearchTransport elasticsearchTransport;
     ElasticsearchAsyncClient elasticsearchAsyncClient;
 
     public CompletableFuture<String> fillIndex() throws Exception{
