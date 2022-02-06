@@ -30,10 +30,10 @@ Content-Type: application/json
         "type": "text"
       },
       "genres": {
-        "type": "text"
+        "type": "integer"
       },
       "year": {
-        "type": "integer"
+        "type": "text"
       },
       "ranking": {
         "type": "integer"

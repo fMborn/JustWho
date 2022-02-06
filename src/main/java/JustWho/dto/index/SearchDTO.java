@@ -12,13 +12,13 @@ public class SearchDTO implements Indexable {
     @JsonProperty
     final String name;
     @JsonProperty
-    final List<String> genres;
+    final List<Integer> genres;
     @JsonProperty
-    final int year;
+    final String year;
     @JsonProperty
-    final int ranking;
+    final double ranking;
 
-    public SearchDTO(String name, List<String> genres, int year, int ranking) {
+    public SearchDTO(String name, List<Integer> genres, String year, double ranking) {
         this.id = name+year;
         this.name = name;
         this.genres = genres;
@@ -29,5 +29,9 @@ public class SearchDTO implements Indexable {
     @Override
     public String getId() {
         return this.id;
+    }
+
+    public static SearchDTO valueOf(String name, List<Integer> genres, String year, double ranking) {
+        return new SearchDTO(name, genres, year, ranking);
     }
 }

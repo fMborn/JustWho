@@ -24,32 +24,32 @@ public class IndexService {
 
     @Inject
     ElasticsearchTransport elasticsearchTransport;
+
+    @Inject
     ElasticsearchAsyncClient elasticsearchAsyncClient;
 
-    public CompletableFuture<String> fillIndex() throws Exception{
+    public CompletableFuture<String> fillIndex() {
         final String name = "Kung Pow: Enter the Fist";
-        final int year = 2002;
-        final SearchDTO searchDTO = new SearchDTO(name, List.of("Action, Abenteuer, Comedy"), year, 44 );
+        final String year = "2002-02-02";
+        final SearchDTO searchDTO = new SearchDTO(name, List.of(11, 12, 31), year, 9.9 );
         final CompletableFuture<IndexResponse> searchIndexResponse = sendToIndex(Constants.SEARCH_INDEX, searchDTO);
 
-        final SuggestDTO suggestDTO = new SuggestDTO(name, year);
+        final SuggestDTO suggestDTO = new SuggestDTO(name, 2002);
         final CompletableFuture<IndexResponse> suggestIndexResponse = sendToIndex(Constants.SUGGEST_INDEX, suggestDTO);
 
         return searchIndexResponse
                 .thenCombine(suggestIndexResponse, (a, b) -> a.result().toString() + " " + b.result().toString());
     }
 
-    private CompletableFuture<IndexResponse> sendToIndex(final String indexName, final Indexable dto) throws IOException {
+    public CompletableFuture<IndexResponse> sendToIndex(final String indexName, final Indexable dto) {
         try {
             return elasticsearchAsyncClient.index(
                     indexRequest -> indexRequest.index(indexName).id(dto.getId()).document(dto));
 
         } catch (Exception e) {
             LOGGER.error("An exception occurred during indexing: " + dto.toString() + "Stacktrace: " + Arrays.toString(e.getStackTrace()));
-            throw e;
+            return CompletableFuture.failedFuture(e);
         }
-
-
     }
 
 }
