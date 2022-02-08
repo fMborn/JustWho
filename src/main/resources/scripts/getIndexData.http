@@ -1,4 +1,4 @@
-GET http://localhost:9200/movies/_search
+GET http://localhost:9200/movies_autosuggest/_search
 Content-Type: application/json
 
 { "query": {"match_all": {}}}
