@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.List;
 
-@JsonDeserialize(using = SearchResultDTODeserializer.class)
+//@JsonDeserialize(using = SearchResultDTODeserializer.class)
 public class SearchResultDTO {
 
     @JsonIgnore
@@ -20,14 +20,5 @@ public class SearchResultDTO {
     @JsonProperty("ranking")
     int ranking = 0;
 
-    public SearchResultDTO(String name, List<String> genres, int year, int ranking) {
-        this.id = name+year;
-        this.name = name;
-        this.genres = genres;
-        this.year = year;
-        this.ranking = ranking;
-    }
-
-    public SearchResultDTO() {};
 }
 

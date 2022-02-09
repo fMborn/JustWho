@@ -5,19 +5,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.List;
 
-@JsonDeserialize(using = SearchResultDTODeserializer.class)
+//@JsonDeserialize(using = SearchResultDTODeserializer.class)
 public class SuggestResultDTO {
 
     @JsonProperty
-    final String name;
+    String name;
     @JsonProperty
-    final int year;
+    int year;
     @JsonProperty("suggest_name")
-    final List<String> suggestName;
+    List<String> suggestName;
 
-    public SuggestResultDTO(String name, int year, List<String> suggestName) {
-        this.name = name;
-        this.year = year;
-        this.suggestName = suggestName;
-    }
 }
