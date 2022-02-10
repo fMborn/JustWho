@@ -1,0 +1,32 @@
+[
+    {
+      "name": "Kung Pow: Enter the Fist",
+      "genres": [
+        "Action",
+        "Abenteuer",
+        "Comedy"
+      ],
+      "year": 2002,
+      "ranking": 44
+    },
+    {
+      "name": "Dracula",
+      "genres": [
+        "Horror",
+        "Drama",
+        "Fantasy"
+      ],
+      "year": 1931,
+      "ranking": 72
+    },
+    {
+      "name": "Spider-Man: No Way Home",
+      "genres": [
+        "Action",
+        "Abenteuer",
+        "Science Fiction"
+      ],
+      "year": 2021,
+      "ranking": 84
+    }
+]

@@ -1,16 +1,16 @@
-package JustWho.dto.index;
+package JustWho.dto.api;
 
+import JustWho.dto.index.Indexable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;
 
 import java.util.List;
 
-@Introspected
-public class SearchDTO implements Indexable {
 
-    @JsonIgnore
-    String id;
+@Introspected
+public class IndexRequestDTO {
+
     @JsonProperty
     String name;
     @JsonProperty
@@ -18,20 +18,7 @@ public class SearchDTO implements Indexable {
     @JsonProperty
     int year;
     @JsonProperty
-    final int ranking;
-
-    public SearchDTO(String name, List<String> genres, int year, int ranking) {
-        this.id = name+year;
-        this.name = name;
-        this.genres = genres;
-        this.year = year;
-        this.ranking = ranking;
-    }
-
-    @Override
-    public String getId() {
-        return this.id;
-    }
+    int ranking;
 
     public String getName() {
         return name;
@@ -39,5 +26,13 @@ public class SearchDTO implements Indexable {
 
     public int getYear() {
         return year;
+    }
+
+    public List<String> getGenres() {
+        return genres;
+    }
+
+    public int getRanking() {
+        return ranking;
     }
 }

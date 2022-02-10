@@ -30,7 +30,7 @@ Content-Type: application/json
         "type": "text"
       },
       "genres": {
-        "type": "text"
+        "type": "keyword"
       },
       "year": {
         "type": "integer"
@@ -42,3 +42,5 @@ Content-Type: application/json
   }
 }
 
+###
+PUT http://localhost:9200/movies/_alias/movies-index

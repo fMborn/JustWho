@@ -1,0 +1,21 @@
+### Reindex Index
+POST  http://localhost:9200/_reindex
+Content-Type: application/json
+
+{
+  "source": {
+    "index": "movies"
+  },
+  "dest": {
+    "index": "movies-new"
+  }
+}
+
+
+###
+# Delete index
+DELETE http://localhost:9200/movies
+
+
+###
+GET http://localhost:9200/_alias
