@@ -9,8 +9,15 @@ import java.util.List;
 
 public class SearchResponseDTO {
 
-    @JsonIgnore
+    @JsonProperty("search_results")
     List<SearchResultDTO> searchResultDTOS;
-    @JsonIgnore
+
+    @JsonProperty("aggregations")
     List<SearchAggregationResultDTO> searchAggregationResultDTOS;
+
+    public SearchResponseDTO(List<SearchResultDTO> searchResultDTOS, List<SearchAggregationResultDTO> searchAggregationResultDTOS) {
+        this.searchResultDTOS = searchResultDTOS;
+        this.searchAggregationResultDTOS = searchAggregationResultDTOS;
+    }
+
 }
