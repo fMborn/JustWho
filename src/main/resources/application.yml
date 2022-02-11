@@ -7,3 +7,5 @@ netty:
       max-order: 3
 
 elasticsearch.httpHosts: http://elastic-fantastic.herokuapp.com/
+
+elasticsearch.security.user: elastic

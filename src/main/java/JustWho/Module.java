@@ -1,5 +1,6 @@
 package JustWho;
 
+import JustWho.util.ElasticsearchSecurityConfigurationProperties;
 import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
@@ -26,6 +27,9 @@ public class Module {
         @Inject
         DefaultElasticsearchConfigurationProperties elasticConfig;
 
+        @Inject
+        ElasticsearchSecurityConfigurationProperties elasticSecurityConfig;
+
         @Replaces(ElasticsearchClient.class)
         @Singleton
         ElasticsearchClient createClient () {
@@ -44,7 +48,7 @@ public class Module {
             final CredentialsProvider credentialsProvider =
                     new BasicCredentialsProvider();
             credentialsProvider.setCredentials(AuthScope.ANY,
-                    new UsernamePasswordCredentials("elastic", "f1c8863ac69cc550695b4b9ee4c9496aff24e687f00bc14d36d3a63b0d36f24b299df89238a9b51fe24763287e31ef5fd46b6f391cfe7d4abef00526de90715"));
+                    new UsernamePasswordCredentials(elasticSecurityConfig.getUser(), elasticSecurityConfig.getPassword()));
 
             RestClient restClient = RestClient.builder(elasticConfig.getHttpHosts()).setHttpClientConfigCallback(new RestClientBuilder.HttpClientConfigCallback() {
                 @Override
