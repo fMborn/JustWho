@@ -1,14 +1,15 @@
 package JustWho.services;
 
-import JustWho.dto.search.SearchResultDTO;
-import JustWho.dto.search.SuggestResultDTO;
+import JustWho.dto.search.*;
 import JustWho.util.Constants;
 import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.CompletionSuggestOption;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.core.search.Suggester;
 import co.elastic.clients.elasticsearch.core.search.Suggestion;
 import jakarta.inject.Inject;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class SearchService {
     @Inject
     ElasticsearchAsyncClient client;
 
-    public CompletableFuture<List<SearchResultDTO>> search() throws IOException {
+    public CompletableFuture<SearchResponseDTO> search() throws IOException {
         /*
         maybe interesting for many data points
                 “aggs”: {
@@ -48,10 +50,10 @@ public class SearchService {
                 .explain(false)
                 .build();
 
-        return client.search(searchRequest, SearchResultDTO.class)
-                .thenApply(response -> response.hits().hits())
-                .thenApply(hits -> hits.stream().map(h -> h.source()).collect(Collectors.toList()));
+       final CompletableFuture<SearchResponse<SearchResultDTO>> searchResponseFuture = client.search(searchRequest, SearchResultDTO.class);
 
+        return searchResponseFuture
+                .thenApply(this::parseResponse);
     }
 
 
@@ -70,6 +72,35 @@ public class SearchService {
         aggregationMap.put("year_aggs", Aggregation.of(a -> a.range(t -> t.field("year").ranges(aggregationRanges))));
 
         return aggregationMap;
+    }
+
+    public SearchResponseDTO parseResponse(final SearchResponse<SearchResultDTO> searchResponse) {
+
+        final List<SearchResultDTO> searchResults = searchResponse.hits().hits().stream().map(Hit::source).collect(Collectors.toList());
+
+        final List<SearchAggregationResultDTO> aggregationResults = searchResponse
+                .aggregations()
+                .entrySet()
+                .stream().map(entry -> new SearchAggregationResultDTO(entry.getKey(), parseAggregations(entry.getValue())))
+                .collect(Collectors.toList());
+
+        return new SearchResponseDTO(searchResults, aggregationResults);
+    }
+    public List<SearchAggregationBucketResultDTO> parseAggregations(Aggregate aggregate) {
+        if (aggregate.isSterms()){
+            return aggregate.sterms()
+                    .buckets().array()
+                    .stream().map(bucket -> new SearchAggregationBucketResultDTO(bucket.key(), bucket.docCount()))
+                    .collect(Collectors.toList());
+        } else if (aggregate.isRange()) {
+            return aggregate.range()
+                    .buckets().array()
+                    .stream().map(bucket -> new SearchAggregationBucketResultDTO(bucket.key(), bucket.docCount()))
+                    .collect(Collectors.toList());
+        } else {
+            return List.of();
+        }
+
     }
 
     public CompletableFuture<List<SuggestResultDTO>> suggest(final String input) throws IOException {
