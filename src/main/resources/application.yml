@@ -1,10 +1,16 @@
 micronaut:
   application:
     name: justWho
+
 netty:
   default:
     allocator:
       max-order: 3
+
+hallo:
+  uri: "https://api.chucknorris.io"
+  placeholder: ""
+  path: "/jokes/random"
 
 elasticsearch.httpHosts: http://elastic-fantastic.herokuapp.com/
 

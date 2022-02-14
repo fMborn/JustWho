@@ -5,11 +5,9 @@ import JustWho.dto.index.SearchDTO;
 import JustWho.dto.index.SuggestDTO;
 import JustWho.util.Constants;
 import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
-import co.elastic.clients.elasticsearch.core.BulkRequest;
 import co.elastic.clients.elasticsearch.core.BulkResponse;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
-import co.elastic.clients.elasticsearch.core.bulk.IndexOperation;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -21,6 +19,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import static io.micronaut.http.HttpRequest.GET;
+
 public class IndexService {
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexService.class);
 
@@ -29,7 +29,7 @@ public class IndexService {
     @Inject
     ElasticsearchAsyncClient elasticsearchAsyncClient;
 
-    public CompletableFuture<String> fillIndex(final List<SearchDTO> searchDTOS) throws Exception{
+    public CompletableFuture<String> fillIndex(final List<SearchDTO> searchDTOS) {
 
         final CompletableFuture<BulkResponse> searchIndexResponse = sendToIndex(Constants.SEARCH_INDEX, searchDTOS);
 
@@ -43,7 +43,7 @@ public class IndexService {
                 .thenCombine(suggestIndexResponse, (a, b) -> a.errors() + " " + b.errors());
     }
 
-    private CompletableFuture<IndexResponse> sendToIndex(final String indexName, final Indexable dto) throws IOException {
+    private CompletableFuture<IndexResponse> sendToIndex(final String indexName, final Indexable dto) {
         try {
             return elasticsearchAsyncClient.index(
                     indexRequest -> indexRequest.index(indexName).id(dto.getId()).document(dto));
@@ -55,7 +55,7 @@ public class IndexService {
 
     }
 
-    private CompletableFuture<BulkResponse> sendToIndex(final String indexName, final List<? extends Indexable> indexables) throws IOException {
+    private CompletableFuture<BulkResponse> sendToIndex(final String indexName, final List<? extends Indexable> indexables) {
         final List<BulkOperation> bulkOperations = indexables
                 .stream().map(indexable -> BulkOperation.of(b -> b.index(i -> i.id(indexable.getId()).document(indexable))))
                 .collect(Collectors.toList());
@@ -66,8 +66,7 @@ public class IndexService {
             LOGGER.error("An exception occurred during indexing. Stacktrace: " + Arrays.toString(e.getStackTrace()));
             throw e;
         }
-
-
     }
+
 
 }
