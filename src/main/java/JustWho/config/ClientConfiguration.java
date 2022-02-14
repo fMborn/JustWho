@@ -12,7 +12,6 @@ public class ClientConfiguration extends HttpClientConfiguration {
 
   private final ClientConnectionPoolConfiguration connectionPoolConfiguration;
 
-
   private URI uri;
   private String placeholder;
   private String path;
