@@ -1,21 +1,22 @@
 package JustWho.controllers;
 
-import JustWho.dto.ChuckNorrisJokeDTO;
-import JustWho.services.ChuckNorrisService;
-import io.micronaut.http.MediaType;
+import JustWho.dto.api.JokeDTO;
+import JustWho.services.ChuckService;
+import JustWho.services.IndexService;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import jakarta.inject.Inject;
-import org.reactivestreams.Publisher;
+import reactor.core.publisher.Mono;
 
 @Controller("/chuck")
 public class ChuckController {
-
     @Inject
-    ChuckNorrisService chuckNorrisService;
+    IndexService indexService;
+    @Inject
+    ChuckService chuckService;
 
-    @Get(uri = "/random", produces = MediaType.APPLICATION_JSON_STREAM)
-    Publisher<ChuckNorrisJokeDTO> fetchReleases() {
-        return chuckNorrisService.getRandomJoke();
+    @Get("/joke")
+    Mono<JokeDTO> joke() {
+        return chuckService.getJoke();
     }
 }

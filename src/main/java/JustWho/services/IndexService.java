@@ -25,6 +25,8 @@ public class IndexService {
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexService.class);
 
     @Inject
+    ElasticsearchTransport elasticsearchTransport;
+    @Inject
     ElasticsearchAsyncClient elasticsearchAsyncClient;
 
     public CompletableFuture<String> fillIndex(final List<SearchDTO> searchDTOS) throws Exception{
