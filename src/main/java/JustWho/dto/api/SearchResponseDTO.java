@@ -1,6 +1,8 @@
-package JustWho.dto.search;
+package JustWho.dto.api;
 
 import JustWho.dto.index.Indexable;
+import JustWho.dto.search.SearchAggregationResultDTO;
+import JustWho.dto.search.SearchResultDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;

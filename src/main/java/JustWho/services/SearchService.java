@@ -1,5 +1,6 @@
 package JustWho.services;
 
+import JustWho.dto.api.SearchResponseDTO;
 import JustWho.dto.search.*;
 import JustWho.util.Constants;
 import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
@@ -17,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

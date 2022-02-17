@@ -25,8 +25,6 @@ public class IndexService {
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexService.class);
 
     @Inject
-    ElasticsearchTransport elasticsearchTransport;
-    @Inject
     ElasticsearchAsyncClient elasticsearchAsyncClient;
 
     public CompletableFuture<String> fillIndex(final List<SearchDTO> searchDTOS) throws Exception{
@@ -43,18 +41,13 @@ public class IndexService {
                 .thenCombine(suggestIndexResponse, (a, b) -> a.errors() + " " + b.errors());
     }
 
-    private CompletableFuture<IndexResponse> sendToIndex(final String indexName, final Indexable dto) throws IOException {
-        try {
-            return elasticsearchAsyncClient.index(
-                    indexRequest -> indexRequest.index(indexName).id(dto.getId()).document(dto));
-
-        } catch (Exception e) {
-            LOGGER.error("An exception occurred during indexing: " + dto.toString() + "Stacktrace: " + Arrays.toString(e.getStackTrace()));
-            throw e;
-        }
-
-    }
-
+    /**
+     * Creates a bulk request and sends multiple instances to the given index
+     * @param indexName
+     * @param indexables
+     * @return
+     * @throws IOException
+     */
     private CompletableFuture<BulkResponse> sendToIndex(final String indexName, final List<? extends Indexable> indexables) throws IOException {
         final List<BulkOperation> bulkOperations = indexables
                 .stream().map(indexable -> BulkOperation.of(b -> b.index(i -> i.id(indexable.getId()).document(indexable))))
@@ -66,7 +59,6 @@ public class IndexService {
             LOGGER.error("An exception occurred during indexing. Stacktrace: " + Arrays.toString(e.getStackTrace()));
             throw e;
         }
-
 
     }
 

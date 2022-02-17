@@ -1,8 +1,6 @@
 package JustWho.controllers;
 
-import JustWho.dto.search.SearchResponseDTO;
-import JustWho.dto.search.SearchResultDTO;
-import JustWho.services.IndexService;
+import JustWho.dto.api.SearchResponseDTO;
 import JustWho.services.SearchService;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
@@ -12,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Controller("/search")
