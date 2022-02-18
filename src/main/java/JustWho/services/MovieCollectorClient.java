@@ -50,10 +50,10 @@ public class MovieCollectorClient {
         Flux<MovieDataContainer> bla = Flux.range(1, 500)
                 .map(page -> buildUri(page, year))
                 .map(uri -> HttpRequest.GET(uri).header(USER_AGENT, "Micronaut HTTP Client").header(ACCEPT, "application/json"))
-                .map(req -> httpClient.retrieve(req, Argument.of(MovieDataContainer.class)))
+                .map(req -> httpClient.retrieve(req, Argument.of(MovieDataContainer.class)))    // call api
                 .flatMap(f -> Flux.from(f))
-                .doOnError(e -> LOGGER.error(e.getMessage()))
-                .onErrorResume(e -> Flux.empty());
+                .doOnError(e -> LOGGER.error(e.getMessage()))   // log error
+                .onErrorResume(e -> Flux.empty());      // skip error element and continue
 
         return bla;
     }
