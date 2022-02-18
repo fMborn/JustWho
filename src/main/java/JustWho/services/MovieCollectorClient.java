@@ -10,18 +10,19 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.uri.UriBuilder;
 import jakarta.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.util.Map;
-
 import static io.micronaut.http.HttpHeaders.ACCEPT;
 import static io.micronaut.http.HttpHeaders.USER_AGENT;
 
 @Singleton
 public class MovieCollectorClient {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MovieCollectorClient.class);
     private final HttpClient httpClient;
     private final MovieCollectorConfiguration configuration;
 
@@ -43,24 +44,21 @@ public class MovieCollectorClient {
         return Mono.from(httpClient.retrieve(req, Argument.of(SingleMovieData.class)));
     }
 
-    Flux<MovieDataContainer> fetchAllMoviesPerYear(int year) {
+    public Flux<MovieDataContainer> fetchAllMoviesPerYear(int year) {
 
-        final URI uri1 = buildUri(1, year);
-        final HttpRequest request = HttpRequest.GET(uri1).header(USER_AGENT, "Micronaut HTTP Client").header(ACCEPT, "application/json");
-        final MovieDataContainer movieDataContainerMono = httpClient.toBlocking().retrieve(request, Argument.of(MovieDataContainer.class));
-
-        final int a = 1;
         // TODO: language?, how to get > 500 pages
-        Flux<MovieDataContainer> bla = Flux.range(1, 2)
+        Flux<MovieDataContainer> bla = Flux.range(1, 500)
                 .map(page -> buildUri(page, year))
                 .map(uri -> HttpRequest.GET(uri).header(USER_AGENT, "Micronaut HTTP Client").header(ACCEPT, "application/json"))
                 .map(req -> httpClient.retrieve(req, Argument.of(MovieDataContainer.class)))
-                .flatMap(f -> Flux.from(f));
+                .flatMap(f -> Flux.from(f))
+                .doOnError(e -> LOGGER.error(e.getMessage()))
+                .onErrorResume(e -> Flux.empty());
 
         return bla;
     }
 
-    Mono<GenreContainer> fetchGenreMapping() {
+    public Mono<GenreContainer> fetchGenreMapping() {
 
         final URI uri = UriBuilder.of("/3/genre/movie/list")
                 .queryParam("api_key", configuration.getApiKey())

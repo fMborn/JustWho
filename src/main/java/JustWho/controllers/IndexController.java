@@ -13,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class IndexController {
         return indexService.fillIndex(searchDTOS);
     }
 
-    @Get("/bla")
+    @Get(value = "/bla", produces = MediaType.APPLICATION_JSON_STREAM)
     public Flux<SearchDTO> bla(@QueryValue String id) throws Exception {
         return movieCollectorService
                .fetchAllMoviesForRange(movieCollectorConfiguration.getStartingYear(),  movieCollectorConfiguration.getStoppingYear());

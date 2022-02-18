@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +36,12 @@ public class MovieCollectorService {
         final Mono<Map<Integer, String>> genreMappingMono = movieCollectorClient
                 .fetchGenreMapping().map(GenreContainer::getGenreMapping);
 
-        Flux<SearchDTO> bla = genreMappingMono.flatMapMany(genreMapping -> Flux.range(startingYear, stoppingYear)
-                .flatMap(movieCollectorClient::fetchAllMoviesPerYear)
+        final int count = stoppingYear - startingYear > 0 ? stoppingYear - startingYear : 1;
+
+        Flux<SearchDTO> bla = genreMappingMono.flatMapMany(genreMapping -> Flux.range(startingYear, count)
+                .flatMap(movieCollectorClient::fetchAllMoviesPerYear).log()
                 .map(MovieDataContainer::getMovies)
+                .delayElements(Duration.ofSeconds(1))
                 .flatMapIterable(movies -> movies.stream().map(movie -> SearchDTO.of(movie, genreMapping)).collect(Collectors.toList()))
         );
         return bla;

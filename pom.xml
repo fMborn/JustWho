@@ -98,12 +98,6 @@
     </dependency>
     <!-- https://mvnrepository.com/artifact/io.projectreactor/reactor-core -->
     <dependency>
-      <groupId>io.projectreactor</groupId>
-      <artifactId>reactor-core</artifactId>
-      <version>3.4.14</version>
-    </dependency>
-
-    <dependency>
       <groupId>io.micronaut.reactor</groupId>
       <artifactId>micronaut-reactor</artifactId>
     </dependency>
