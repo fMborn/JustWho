@@ -12,7 +12,7 @@ hallo:
   placeholder: ""
   path: "/jokes/random"
 
-elasticsearch.httpHosts: http://elastic-fantastic.herokuapp.com/
+elasticsearch.httpHosts: http://85.214.64.21:9200/
 
 elasticsearch.security.user: elastic
 

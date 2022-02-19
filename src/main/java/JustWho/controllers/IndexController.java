@@ -28,16 +28,18 @@ public class IndexController {
     @Inject
     MovieCollectorConfiguration movieCollectorConfiguration;
 
-    @Post("/fill")
-    public CompletableFuture<String> index(@Body @Valid List<IndexRequestDTO> movies) throws Exception{
-
-        final List<SearchDTO> searchDTOS = movies.stream().map(movie -> new SearchDTO(movie.getName(), movie.getGenres(), movie.getYear(), movie.getRanking())).collect(Collectors.toList());
-        return indexService.fillIndex(searchDTOS);
-    }
+//    @Post("/fill")
+//    public CompletableFuture<String> index(@Body @Valid List<IndexRequestDTO> movies) throws Exception{
+//
+//        final List<SearchDTO> searchDTOS = movies.stream().map(movie -> new SearchDTO(movie.getName(), movie.getGenres(), movie.getYear(), movie.getRanking())).collect(Collectors.toList());
+//        return indexService.fillIndex(searchDTOS);
+//    }
 
     @Get(value = "/bla", produces = MediaType.APPLICATION_JSON_STREAM)
-    public Flux<SearchDTO> bla(@QueryValue String id) throws Exception {
-        return movieCollectorService
-               .fetchAllMoviesForRange(movieCollectorConfiguration.getStartingYear(),  movieCollectorConfiguration.getStoppingYear());
+    public CompletableFuture<String> bla(@QueryValue String id) throws Exception {
+        Flux<SearchDTO> bla = movieCollectorService
+            .fetchAllMoviesForRange(movieCollectorConfiguration.getStartingYear(),  movieCollectorConfiguration.getStoppingYear());
+
+        return indexService.fillIndex(bla);
     }
 }

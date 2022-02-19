@@ -1,4 +1,4 @@
-PUT http://localhost:9200/movies_autosuggest
+PUT http://85.214.64.21:9200/movies_autosuggest
 Content-Type: application/json
 
 {
@@ -17,7 +17,7 @@ Content-Type: application/json
 ###
 
 ### Creates new index called movies
-PUT  http://localhost:9200/movies
+PUT  http://85.214.64.21:9200/movies
 Content-Type: application/json
 
 {
@@ -30,7 +30,7 @@ Content-Type: application/json
         "type": "text"
       },
       "genres": {
-        "type": "keyword"
+        "type": "text"
       },
       "year": {
         "type": "integer"
@@ -43,4 +43,4 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:9200/movies/_alias/movies-index
+PUT http://85.214.64.21:9200/movies/_alias/movies-index
