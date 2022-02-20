@@ -13,10 +13,8 @@ import io.netty.util.internal.StringUtil;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.publisher.Flux;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -34,7 +32,7 @@ public class IndexService {
         final CompletableFuture<BulkResponse> searchIndexResponseFuture = sendToIndex(Constants.SEARCH_INDEX, searchDTOS);
 
         final List<SuggestDTO> suggestDTOs = searchDTOS.stream()
-                .map(movie -> new SuggestDTO(movie.getName(), movie.getYear()))
+                .map(movie -> new SuggestDTO(movie.getTitle(), movie.getYear(), movie.getPosterPath()))
                 .collect(Collectors.toList());
         final CompletableFuture<BulkResponse> suggestIndexResponseFuture = sendToIndex(Constants.SUGGEST_INDEX, suggestDTOs);
 

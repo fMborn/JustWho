@@ -7,9 +7,9 @@ Content-Type: application/json
   },
   "mappings": {
     "properties": {
-      "name": { "type": "text" },
+      "title": { "type": "text" },
       "year": { "type": "integer" },
-      "suggest_name": { "type": "completion" }
+      "suggest_title": { "type": "completion" }
     }
   }
 }
@@ -26,17 +26,20 @@ Content-Type: application/json
   },
   "mappings": {
     "properties": {
-      "name": {
+      "title": {
+        "type": "text"
+      },
+      "overview": {
         "type": "text"
       },
       "genres": {
         "type": "text"
       },
-      "year": {
-        "type": "integer"
+      "release_date": {
+        "type": "date"
       },
-      "ranking": {
-        "type": "integer"
+      "vote_average": {
+        "type": "float"
       }
     }
   }

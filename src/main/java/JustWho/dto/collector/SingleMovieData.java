@@ -10,8 +10,6 @@ import java.util.List;
 @Introspected
 public class SingleMovieData {
 
-    @JsonProperty("adult")
-    boolean adult;
     @JsonProperty("genre_ids")
     List<Integer> genreIds;
     @JsonProperty("title")
@@ -20,12 +18,25 @@ public class SingleMovieData {
     String overview;
     @JsonProperty("vote_average")
     double voteAverage;
+    @JsonProperty("id")
+    String movieId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonProperty("release_date")
     Date realeaseDate;
+    @JsonProperty("backdrop_path")
+    String backdropPath;
+    @JsonProperty("poster_path")
+    String posterPath;
+    public String getBackdropPath() {
+        return backdropPath;
+    }
 
-    public boolean isAdult() {
-        return adult;
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public String getMovieId() {
+        return movieId;
     }
 
     public List<Integer> getGenres() {
