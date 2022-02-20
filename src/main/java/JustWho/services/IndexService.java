@@ -24,7 +24,7 @@ public class IndexService {
     @Inject
     ElasticsearchAsyncClient elasticsearchAsyncClient;
 
-    public CompletableFuture<String> fillIndex(final Flux<SearchDTO> searchDTOS) throws Exception{
+    public CompletableFuture<String> fillIndex(final Flux<SearchDTO> searchDTOS) {
 
         final CompletableFuture<BulkResponse> searchIndexResponse = sendToIndex(Constants.SEARCH_INDEX, searchDTOS);
 
@@ -38,16 +38,16 @@ public class IndexService {
     }
 
     /**
-     * Creates a bulk request and sends multiple instances to the given index
-     * @param indexName
-     * @param indexables
-     * @return
-     * @throws IOException
+     * Creates a bulk request and sends multiple instances to the given index.
+     * @param indexName Name of the index data will be indexed into.
+     * @param indexables Flux of DTOs getting indexed.
+     * @return Returns the bulk response from elasticasyncclient
      */
-    private CompletableFuture<BulkResponse> sendToIndex(final String indexName, final Flux<? extends Indexable> indexables) throws IOException {
+    private CompletableFuture<BulkResponse> sendToIndex(final String indexName, final Flux<? extends Indexable> indexables) {
         final Flux<BulkOperation> bulkOperations = indexables
                 .map(indexable -> BulkOperation.of(b -> b.index(i -> i.id(indexable.getId()).document(indexable))));
         try {
+            //TODO .block
             return elasticsearchAsyncClient.bulk(b -> b.index(indexName).operations(bulkOperations.collectList().block()));
 
         } catch (Exception e) {

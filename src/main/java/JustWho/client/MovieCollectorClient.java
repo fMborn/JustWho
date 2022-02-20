@@ -1,4 +1,4 @@
-package JustWho.services;
+package JustWho.client;
 
 import JustWho.dto.collector.GenreContainer;
 import JustWho.dto.collector.MovieDataContainer;
@@ -32,7 +32,7 @@ public class MovieCollectorClient {
         this.httpClient = httpClient;
     }
 
-    Mono<SingleMovieData> fetchSingleMovie(String id) {
+    public Mono<SingleMovieData> fetchSingleMovie(String id) {
 
         final URI uri = UriBuilder.of("/3/movie")
                 .path(id)
@@ -47,11 +47,11 @@ public class MovieCollectorClient {
     public Flux<MovieDataContainer> fetchAllMoviesPerYear(int year) {
 
         // TODO: language?, how to get > 500 pages
-        Flux<MovieDataContainer> bla = Flux.range(1, 500)
+        Flux<MovieDataContainer> bla = Flux.range(1, 1000)
                 .map(page -> buildUri(page, year))
                 .map(uri -> HttpRequest.GET(uri).header(USER_AGENT, "Micronaut HTTP Client").header(ACCEPT, "application/json"))
                 .map(req -> httpClient.retrieve(req, Argument.of(MovieDataContainer.class)))    // call api
-                .flatMap(f -> Flux.from(f))
+                .flatMap(Flux::from)
                 .doOnError(e -> LOGGER.error(e.getMessage()))   // log error
                 .onErrorResume(e -> Flux.empty());      // skip error element and continue
 
