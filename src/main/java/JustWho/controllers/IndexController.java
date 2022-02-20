@@ -8,6 +8,7 @@ import JustWho.services.MovieCollectorService;
 import JustWho.util.MovieCollectorConfiguration;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
+import io.netty.util.internal.StringUtil;
 import jakarta.inject.Inject;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -37,9 +38,17 @@ public class IndexController {
 
     @Get(value = "/bla", produces = MediaType.APPLICATION_JSON_STREAM)
     public CompletableFuture<String> bla(@QueryValue String id) throws Exception {
+
+        Flux.just("1", "2", "3", "4").buffer(2).subscribe(s -> System.out.println(s));
+
+
         Flux<SearchDTO> bla = movieCollectorService
             .fetchAllMoviesForRange(movieCollectorConfiguration.getStartingYear(),  movieCollectorConfiguration.getStoppingYear());
 
-        return indexService.fillIndex(bla);
+        //indexService.
+//
+//        bla.subscribe(s -> s.)
+//        return indexService.fillIndex(bla);
+        return Mono.just("").toFuture();
     }
 }

@@ -1,4 +1,4 @@
-PUT https://85.214.64.21:9200/movies_autosuggest
+PUT {{host}}/movies_autosuggest
 Content-Type: application/json
 
 {
@@ -17,7 +17,7 @@ Content-Type: application/json
 ###
 
 ### Creates new index called movies
-PUT  https://85.214.64.21:9200/movies
+PUT  {{host}}/movies
 Content-Type: application/json
 
 {
@@ -43,4 +43,4 @@ Content-Type: application/json
 }
 
 ###
-PUT https://85.214.64.21:9200/movies/_alias/movies-index
+PUT {{host}}/movies/_alias/movies-index

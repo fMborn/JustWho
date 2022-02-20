@@ -1,6 +1,7 @@
 package JustWho.jobs;
 
 import JustWho.dto.index.SearchDTO;
+import JustWho.services.IndexService;
 import JustWho.services.MovieCollectorService;
 import JustWho.util.MovieCollectorConfiguration;
 import io.micronaut.scheduling.annotation.Scheduled;
@@ -24,15 +25,22 @@ public class MovieCollectorJob {
 
     @Inject
     MovieCollectorService movieCollectorService;
+    @Inject
+    IndexService indexService;
 
     @Scheduled(fixedDelay = "1d", initialDelay = "5s")
     void executeEveryDay() {
+        final int startingYear = movieCollectorConfiguration.getStartingYear();
+        final int stoppingYear = movieCollectorConfiguration.getStoppingYear();
+        LOGGER.info("Starting import job for years" + startingYear + " - " + stoppingYear);
+        // load all movies for config
+        Flux<SearchDTO> searchDTOFlux = movieCollectorService
+                .fetchAllMoviesForRange(movieCollectorConfiguration.getStartingYear(),  movieCollectorConfiguration.getStoppingYear());
 
-        //Flux<SearchDTO> d = movieCollectorService
-         //       .fetchAllMoviesForRange(movieCollectorConfiguration.getStartingYear(),  movieCollectorConfiguration.getStoppingYear());
+        // subscription starts flux
+        searchDTOFlux.buffer(20).subscribe(searchDTOs -> indexService.fillIndex(searchDTOs));
 
-        //d.subscribeOn()
-        //LOGGER.info(d.getName().toString());
+        LOGGER.info("Finished import job");
     }
 
 }
