@@ -39,7 +39,7 @@ public class MovieCollectorService {
         Flux<SearchDTO> bla = genreMappingMono.flatMapMany(genreMapping -> Flux.range(startingYear, count)
                 .flatMap(movieCollectorClient::fetchAllMoviesPerYear).log()
                 .map(MovieDataContainer::getMovies)
-                .delayElements(Duration.ofSeconds(1))
+                .delayElements(Duration.ofMillis(300))
                 .flatMapIterable(movies -> movies.stream().map(movie -> SearchDTO.of(movie, genreMapping)).collect(Collectors.toList()))
         );
         return bla;

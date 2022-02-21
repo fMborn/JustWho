@@ -27,6 +27,10 @@ public class SearchDTO implements Indexable {
     String posterPath;
     @JsonProperty
     String backdropPath;
+    @JsonProperty
+    String originalTitle;
+    @JsonProperty
+    String originalLanguage;
 
     public SearchDTO(
             String id,
@@ -36,7 +40,9 @@ public class SearchDTO implements Indexable {
             double voteAverage,
             String overview,
             String posterPath,
-            String backdropPath
+            String backdropPath,
+            String originalTitle,
+            String originalLanguage
     ) {
         this.id = id;
         this.title = title;
@@ -46,6 +52,8 @@ public class SearchDTO implements Indexable {
         this.overview = overview;
         this.posterPath = posterPath;
         this.backdropPath = backdropPath;
+        this.originalTitle = originalTitle;
+        this.originalLanguage = originalLanguage;
     }
 
     @Override
@@ -82,7 +90,9 @@ public class SearchDTO implements Indexable {
                 movieData.getVoteAverage(),
                 movieData.getOverview(),
                 movieData.getPosterPath(),
-                movieData.getBackdropPath()
+                movieData.getBackdropPath(),
+                movieData.getOriginalTitle(),
+                movieData.getOriginalLanguage()
         );
     }
 }

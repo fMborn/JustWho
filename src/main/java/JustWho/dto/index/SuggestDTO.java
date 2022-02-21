@@ -18,9 +18,9 @@ public class SuggestDTO implements Indexable {
     final String title;
     @JsonProperty
     final int year;
-    @JsonProperty("suggest_title")
+    @JsonProperty
     final List<String> suggestTitle;
-    @JsonProperty("poster_path")
+    @JsonProperty
     String posterPath;
 
     public SuggestDTO(String title, int year, String posterPath) {

@@ -59,7 +59,7 @@ public class MovieCollectorClient {
     }
 
     public Mono<GenreContainer> fetchGenreMapping() {
-
+        LOGGER.info("Fetching genre mapping");
         final URI uri = UriBuilder.of("/3/genre/movie/list")
                 .queryParam("api_key", configuration.getApiKey())
                 .build();

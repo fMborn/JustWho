@@ -14,6 +14,10 @@ public class SingleMovieData {
     List<Integer> genreIds;
     @JsonProperty("title")
     String title;
+    @JsonProperty("original_title")
+    String originalTitle;
+    @JsonProperty("original_language")
+    String originalLanguage;
     @JsonProperty("overview")
     String overview;
     @JsonProperty("vote_average")
@@ -61,5 +65,13 @@ public class SingleMovieData {
 
     public Date getRealeaseDate() {
         return realeaseDate;
+    }
+
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    public String getOriginalLanguage() {
+        return originalLanguage;
     }
 }

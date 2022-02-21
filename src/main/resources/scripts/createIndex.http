@@ -9,7 +9,7 @@ Content-Type: application/json
     "properties": {
       "title": { "type": "text" },
       "year": { "type": "integer" },
-      "suggest_title": { "type": "completion" }
+      "suggestTitle": { "type": "completion" }
     }
   }
 }
@@ -35,11 +35,17 @@ Content-Type: application/json
       "genres": {
         "type": "text"
       },
-      "release_date": {
+      "releaseDate": {
         "type": "date"
       },
-      "vote_average": {
+      "voteAverage": {
         "type": "float"
+      },
+      "originalTitle": {
+        "type": "text"
+      },
+      "originalLanguage": {
+        "type": "text"
       }
     }
   }
