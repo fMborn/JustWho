@@ -56,13 +56,6 @@ public class IndexService {
      * @param indexables Flux of DTOs getting indexed.
      * @return Returns the bulk response from elasticasyncclient
      */
-    /**
-     * Creates a bulk request and sends multiple instances to the given index
-     * @param indexName
-     * @param indexables
-     * @return
-     * @throws IOException
-     */
     private CompletableFuture<BulkResponse> sendToIndex(final String indexName, final List<? extends Indexable> indexables) {
         final List<BulkOperation> bulkOperations = indexables
                 .stream().map(indexable -> BulkOperation.of(b -> b.index(i -> i.id(indexable.getId()).document(indexable))))

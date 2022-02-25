@@ -1,5 +1,0 @@
-cluster.name: "docker-elastic-fantastic"
-network.host: 0.0.0.0
-xpack.security.enabled: true
-discovery.type: single-node
-http.port: ${PORT}
