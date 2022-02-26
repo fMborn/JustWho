@@ -101,6 +101,11 @@
       <groupId>io.micronaut.reactor</groupId>
       <artifactId>micronaut-reactor</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.micronaut.security</groupId>
+      <artifactId>micronaut-security</artifactId>
+      <version>3.3.0</version>
+    </dependency>
   </dependencies>
 
   <build>

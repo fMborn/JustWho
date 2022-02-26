@@ -1,4 +1,4 @@
-PUT https://85.214.64.21:9200/movies_autosuggest
+PUT {{host}}/movies_autosuggest
 Content-Type: application/json
 
 {
@@ -7,9 +7,9 @@ Content-Type: application/json
   },
   "mappings": {
     "properties": {
-      "name": { "type": "text" },
+      "title": { "type": "text" },
       "year": { "type": "integer" },
-      "suggest_name": { "type": "completion" }
+      "suggestTitle": { "type": "completion" }
     }
   }
 }
@@ -17,7 +17,7 @@ Content-Type: application/json
 ###
 
 ### Creates new index called movies
-PUT  https://85.214.64.21:9200/movies
+PUT  {{host}}/movies
 Content-Type: application/json
 
 {
@@ -26,21 +26,30 @@ Content-Type: application/json
   },
   "mappings": {
     "properties": {
-      "name": {
+      "title": {
+        "type": "text"
+      },
+      "overview": {
         "type": "text"
       },
       "genres": {
         "type": "text"
       },
-      "year": {
-        "type": "integer"
+      "releaseDate": {
+        "type": "date"
       },
-      "ranking": {
-        "type": "integer"
+      "voteAverage": {
+        "type": "float"
+      },
+      "originalTitle": {
+        "type": "text"
+      },
+      "originalLanguage": {
+        "type": "text"
       }
     }
   }
 }
 
 ###
-PUT https://85.214.64.21:9200/movies/_alias/movies-index
+PUT {{host}}/movies/_alias/movies-index

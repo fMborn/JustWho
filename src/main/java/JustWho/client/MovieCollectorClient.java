@@ -6,6 +6,7 @@ import JustWho.dto.collector.SingleMovieData;
 import JustWho.util.MovieCollectorConfiguration;
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.uri.UriBuilder;
@@ -47,19 +48,17 @@ public class MovieCollectorClient {
     public Flux<MovieDataContainer> fetchAllMoviesPerYear(int year) {
 
         // TODO: language?, how to get > 500 pages
-        Flux<MovieDataContainer> bla = Flux.range(1, 1000)
-                .map(page -> buildUri(page, year))
-                .map(uri -> HttpRequest.GET(uri).header(USER_AGENT, "Micronaut HTTP Client").header(ACCEPT, "application/json"))
+
+        return Flux.range(1, 500)
+                .map(page -> buildRequest(page, year))
                 .map(req -> httpClient.retrieve(req, Argument.of(MovieDataContainer.class)))    // call api
                 .flatMap(Flux::from)
                 .doOnError(e -> LOGGER.error(e.getMessage()))   // log error
-                .onErrorResume(e -> Flux.empty());      // skip error element and continue
-
-        return bla;
+                .onErrorResume(e -> Flux.empty());
     }
 
     public Mono<GenreContainer> fetchGenreMapping() {
-
+        LOGGER.info("Fetching genre mapping");
         final URI uri = UriBuilder.of("/3/genre/movie/list")
                 .queryParam("api_key", configuration.getApiKey())
                 .build();
@@ -69,12 +68,14 @@ public class MovieCollectorClient {
         return Mono.from(httpClient.retrieve(req, Argument.of(GenreContainer.class)));
     }
 
-    private URI buildUri(final int page, final int year) {
-        return UriBuilder.of("/3/discover/movie")
+    private MutableHttpRequest<Object> buildRequest(final int page, final int year) {
+        final URI uri = UriBuilder.of("/3/discover/movie")
                 .queryParam("primary_release_year", year)
                 .queryParam("api_key", configuration.getApiKey())
                 .queryParam("page", page)
                 .build();
+        LOGGER.debug("Calling url with parameters page: " + page + "year: " + year);
+        return HttpRequest.GET(uri).header(USER_AGENT, "Micronaut HTTP Client").header(ACCEPT, "application/json");
     }
 }
 

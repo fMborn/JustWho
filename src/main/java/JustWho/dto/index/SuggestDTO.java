@@ -15,20 +15,23 @@ public class SuggestDTO implements Indexable {
     @JsonIgnore
     final String id;
     @JsonProperty
-    final String name;
+    final String title;
     @JsonProperty
     final int year;
-    @JsonProperty("suggest_name")
-    final List<String> suggestName;
+    @JsonProperty
+    final List<String> suggestTitle;
+    @JsonProperty
+    String posterPath;
 
-    public SuggestDTO(String name, int year) {
-        this.id = name + year;
-        this.name = name;
+    public SuggestDTO(String title, int year, String posterPath) {
+        this.id = title + year;
+        this.title = title;
         this.year = year;
-        this.suggestName = createSuggestName(name);
+        this.suggestTitle = createSuggestTitle(title);
+        this.posterPath = posterPath;
     }
 
-    private List<String> createSuggestName(final String name) {
+    private List<String> createSuggestTitle(final String name) {
         final List<String> list = Arrays.asList(name.split(" "));
         Collections.reverse(list);
         return list.stream()
