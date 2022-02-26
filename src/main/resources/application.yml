@@ -7,7 +7,7 @@ netty:
     allocator:
       max-order: 3
 
-elasticsearch.httpHosts: https://89.58.38.149:9300/
+elasticsearch.httpHosts: https://89.58.38.149:9200/
 
 elasticsearch.security.user: elastic
 
