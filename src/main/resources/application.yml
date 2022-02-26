@@ -7,7 +7,7 @@ netty:
     allocator:
       max-order: 3
 
-elasticsearch.httpHosts: https://h2964346.stratoserver.net:9200/
+elasticsearch.httpHosts: https://v2202202169497180713.goodsrv.de:9200/
 
 elasticsearch.security.user: elastic
 
