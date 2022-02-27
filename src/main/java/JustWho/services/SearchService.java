@@ -30,7 +30,7 @@ public class SearchService {
     @Inject
     ElasticsearchAsyncClient client;
 
-    public CompletableFuture<SearchResponseDTO> search() throws IOException {
+    public CompletableFuture<SearchResponseDTO> search() {
         /*
         maybe interesting for many data points
                 “aggs”: {
@@ -46,6 +46,7 @@ public class SearchService {
        final SearchRequest searchRequest = new SearchRequest.Builder()
                 .query(q -> q.matchAll(m -> m))
                 .index(Constants.SEARCH_INDEX)
+                .size(0)
                 .aggregations(createAggregations())
                 .explain(false)
                 .build();
@@ -60,7 +61,7 @@ public class SearchService {
     private Map<String, Aggregation> createAggregations() {
         final Map<String, Aggregation> aggregationMap = new HashMap<>();
         // genre aggregations
-        aggregationMap.put("genres_aggs", Aggregation.of(a -> a.terms(t -> t.field("genres"))));
+        aggregationMap.put("genres_aggs", Aggregation.of(a -> a.terms(t -> t.field("genres.keyword"))));
 
         // year aggregations
         final List<AggregationRange> aggregationRanges = List.of(
@@ -103,7 +104,7 @@ public class SearchService {
 
     }
 
-    public CompletableFuture<List<SuggestResultDTO>> suggest(final String input) throws IOException {
+    public CompletableFuture<List<SuggestResultDTO>> suggest(final String input) {
         final String suggestKey = "name_suggestions";
         final Suggester suggester = Suggester.of(builder -> builder.text(input)
                 .suggesters(suggestKey, s -> s.completion(c -> c.field("suggest_name").skipDuplicates(true))));

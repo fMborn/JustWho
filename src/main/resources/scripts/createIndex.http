@@ -33,7 +33,7 @@ Content-Type: application/json
         "type": "text"
       },
       "genres": {
-        "type": "text"
+        "type": "keyword"
       },
       "releaseDate": {
         "type": "date"

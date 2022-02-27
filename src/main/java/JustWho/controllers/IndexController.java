@@ -42,17 +42,17 @@ public class IndexController {
 //    }
 
     @Get(value = "/importYears", produces = MediaType.APPLICATION_JSON_STREAM)
-    public Flux<List<String>> bla(final String startingYear, final String stoppingYear) {
+    public Flux<List<String>> bla(final int startingYear, final int stoppingYear) {
 
         //final int startingYear = movieCollectorConfiguration.getStartingYear();
         //final int stoppingYear = movieCollectorConfiguration.getStoppingYear();
         LOGGER.info("Starting import job for years " + startingYear + " - " + stoppingYear);
         // load all movies for config
         Flux<List<String>> searchDTOFlux = movieCollectorService
-                .fetchAllMoviesForRange(movieCollectorConfiguration.getStartingYear(),  movieCollectorConfiguration.getStoppingYear())
+                .fetchAllMoviesForRange(startingYear,  stoppingYear)
                 .buffer(150)
                 .flatMap(searchDTOs -> Mono.fromFuture(indexService.fillIndex(searchDTOs)))
-                .doFinally(c -> LOGGER.info("completed"));;
+                .doFinally(c -> LOGGER.info("completed"));
 
         // subscription starts flux
         return searchDTOFlux;

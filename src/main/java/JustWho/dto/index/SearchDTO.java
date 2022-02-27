@@ -18,7 +18,7 @@ public class SearchDTO implements Indexable {
     @JsonProperty
     List<String> genres;
     @JsonProperty
-    Date realeaseDate;
+    Date releaseDate;
     @JsonProperty
     String overview;
     @JsonProperty
@@ -36,7 +36,7 @@ public class SearchDTO implements Indexable {
             String id,
             String title,
             List<String> genres,
-            Date realeaseDate,
+            Date releaseDate,
             double voteAverage,
             String overview,
             String posterPath,
@@ -47,7 +47,7 @@ public class SearchDTO implements Indexable {
         this.id = id;
         this.title = title;
         this.genres = genres;
-        this.realeaseDate = realeaseDate;
+        this.releaseDate = releaseDate;
         this.voteAverage = voteAverage;
         this.overview = overview;
         this.posterPath = posterPath;
@@ -67,7 +67,7 @@ public class SearchDTO implements Indexable {
 
     public int getYear() {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(realeaseDate);
+        calendar.setTime(releaseDate);
         return calendar.get(Calendar.YEAR);
     }
 
