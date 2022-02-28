@@ -1,13 +1,24 @@
 micronaut:
   application:
     name: justWho
-
+  security:
+    intercept-url-map:
+      -
+        pattern: /search
+        http-method: GET
+        access:
+          - isAnonymous()
+      -
+        pattern: /suggest
+        http-method: GET
+        access:
+          - isAnonymous()
 netty:
   default:
     allocator:
       max-order: 3
 
-elasticsearch.httpHosts: https://89.58.38.149:9200/
+elasticsearch.httpHosts: https://v2202202169497180713.goodsrv.de:9200/
 
 elasticsearch.security.user: elastic
 
