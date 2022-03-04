@@ -1,23 +1,32 @@
 package JustWho.dto.search;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import javax.validation.constraints.DecimalMin;
 import java.util.List;
 
 public class SearchResultDTO {
 
-    @JsonIgnore
-    String id = "";
-    @JsonProperty("name")
-    String name = "";
+    @JsonProperty("title")
+    private String title;
     @JsonProperty("genres")
-     List<String> genres = List.of("");
+    private List<String> genres = null;
+    @JsonProperty("releaseDate")
+    @DecimalMin("9223372036854775807")
+    private Long releaseDate;
+    @JsonProperty("overview")
+    private String overview;
+    @JsonProperty("voteAverage")
+    private Double voteAverage;
+    @JsonProperty("posterPath")
+    private String posterPath;
+    @JsonProperty("backdropPath")
+    private String backdropPath;
+    @JsonProperty("originalTitle")
+    private String originalTitle;
+    @JsonProperty("originalLanguage")
+    private String originalLanguage;
     @JsonProperty("year")
-    int year = 0;
-    @JsonProperty("ranking")
-    int ranking = 0;
-
+    private Integer year;
 }
 

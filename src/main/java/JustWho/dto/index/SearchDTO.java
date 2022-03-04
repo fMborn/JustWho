@@ -86,7 +86,7 @@ public class SearchDTO implements Indexable {
                 movieData.getMovieId(),
                 movieData.getTitle(),
                 genres,
-                movieData.getRealeaseDate(),
+                movieData.getReleaseDate(),
                 movieData.getVoteAverage(),
                 movieData.getOverview(),
                 movieData.getPosterPath(),

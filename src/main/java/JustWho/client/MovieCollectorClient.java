@@ -1,5 +1,6 @@
 package JustWho.client;
 
+import JustWho.dto.collector.CreditsContainer;
 import JustWho.dto.collector.GenreContainer;
 import JustWho.dto.collector.MovieDataContainer;
 import JustWho.dto.collector.SingleMovieData;
@@ -76,6 +77,17 @@ public class MovieCollectorClient {
                 .build();
         LOGGER.debug("Calling url with parameters page: " + page + "year: " + year);
         return HttpRequest.GET(uri).header(USER_AGENT, "Micronaut HTTP Client").header(ACCEPT, "application/json");
+    }
+
+    public Mono<CreditsContainer> fetchCredits(String id) {
+        final URI uri = UriBuilder.of("/3/movie")
+                                  .path(id + "/credits")
+                                  .queryParam("api_key", configuration.getApiKey())
+                                  .build();
+        HttpRequest<?> req = HttpRequest.GET(uri)
+                                        .header(USER_AGENT, "Micronaut HTTP Client")
+                                        .header(ACCEPT, "application/json");
+        return Mono.from(httpClient.retrieve(req, Argument.of(CreditsContainer.class)));
     }
 }
 

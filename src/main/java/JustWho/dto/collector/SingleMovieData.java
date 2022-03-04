@@ -26,7 +26,7 @@ public class SingleMovieData {
     String movieId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonProperty("release_date")
-    Date realeaseDate;
+    Date releaseDate;
     @JsonProperty("backdrop_path")
     String backdropPath;
     @JsonProperty("poster_path")
@@ -63,8 +63,8 @@ public class SingleMovieData {
         return voteAverage;
     }
 
-    public Date getRealeaseDate() {
-        return realeaseDate;
+    public Date getReleaseDate() {
+        return releaseDate;
     }
 
     public String getOriginalTitle() {

@@ -1,26 +1,22 @@
 package JustWho.controllers;
 
-import JustWho.dto.index.SearchDTO;
 import JustWho.services.IndexService;
 import JustWho.services.MovieCollectorService;
 import JustWho.util.MovieCollectorConfiguration;
-import co.elastic.clients.elasticsearch.security.get_token.AuthenticationProvider;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 @Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller("/index")
@@ -58,5 +54,15 @@ public class IndexController {
         return searchDTOFlux;
 
 
+    }
+
+    @Get(value = "/test", produces = MediaType.APPLICATION_JSON)
+    public CompletableFuture<List<String>> indexCredits() {
+        LOGGER.info("Starting import for credits.");
+
+        CompletableFuture<Stream<String>> bla = indexService.getAllIds();
+
+        bla.thenApply(x -> movieCollectorService.fetchCredits(x));
+        return null;
     }
 }

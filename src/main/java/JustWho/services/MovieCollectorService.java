@@ -1,6 +1,7 @@
 package JustWho.services;
 
 import JustWho.client.MovieCollectorClient;
+import JustWho.dto.collector.CreditsContainer;
 import JustWho.dto.collector.GenreContainer;
 import JustWho.dto.collector.MovieDataContainer;
 import JustWho.dto.collector.SingleMovieData;
@@ -12,8 +13,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MovieCollectorService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MovieCollectorService.class);
@@ -45,6 +48,10 @@ public class MovieCollectorService {
         return bla;
     }
 
+    public void fetchCredits(final Stream<String> id) {
+        Stream<Mono<CreditsContainer>> bla = id.map(x -> movieCollectorClient.fetchCredits(x));
 
+
+    }
 
 }
