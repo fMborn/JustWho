@@ -142,7 +142,8 @@ public class SearchService {
                 .stream().map(entry -> new SearchAggregationResultDTO(entry.getKey(), parseAggregations(entry.getValue())))
                 .collect(Collectors.toList());
 
-        return new SearchResponseDTO(searchResponse.hits().total().value(), searchResults, aggregationResults);
+        final long hits = searchResponse.hits().total() != null ? searchResponse.hits().total().value() : 0;
+        return new SearchResponseDTO(hits, searchResults, aggregationResults);
     }
     public List<SearchAggregationBucketResultDTO> parseAggregations(Aggregate aggregate) {
         if (aggregate.isSterms()){
