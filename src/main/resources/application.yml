@@ -1,7 +1,18 @@
 micronaut:
   application:
     name: justWho
-
+  security:
+    intercept-url-map:
+      -
+        pattern: /search
+        http-method: GET
+        access:
+          - isAnonymous()
+      -
+        pattern: /suggest
+        http-method: GET
+        access:
+          - isAnonymous()
 netty:
   default:
     allocator:
