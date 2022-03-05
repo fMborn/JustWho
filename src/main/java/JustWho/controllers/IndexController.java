@@ -1,5 +1,6 @@
 package JustWho.controllers;
 
+import JustWho.dto.search.SearchResultDTO;
 import JustWho.services.IndexService;
 import JustWho.services.MovieCollectorService;
 import JustWho.util.MovieCollectorConfiguration;
@@ -57,12 +58,9 @@ public class IndexController {
     }
 
     @Get(value = "/test", produces = MediaType.APPLICATION_JSON)
-    public CompletableFuture<List<String>> indexCredits() {
+    public Flux<List<String>> indexCredits() {
         LOGGER.info("Starting import for credits.");
 
-        CompletableFuture<Stream<String>> bla = indexService.getAllIds();
-
-        bla.thenApply(x -> movieCollectorService.fetchCredits(x));
-        return null;
+        return indexService.indexCastAndCrew();
     }
 }

@@ -28,5 +28,33 @@ public class SearchResultDTO {
     private String originalLanguage;
     @JsonProperty("year")
     private Integer year;
+    @JsonProperty("castNames")
+    private List<String> castNames;
+    @JsonProperty("director")
+    private String director;
+
+    public String getTitle() {return title;}
+
+    public List<String> getGenres() {return genres;}
+
+    public Long getReleaseDate() {return releaseDate;}
+
+    public String getOverview() {return overview;}
+
+    public Double getVoteAverage() {return voteAverage;}
+
+    public String getPosterPath() {return posterPath;}
+
+    public String getBackdropPath() {return backdropPath;}
+
+    public String getOriginalTitle() {return originalTitle;}
+
+    public String getOriginalLanguage() {return originalLanguage;}
+
+    public Integer getYear() {return year;}
+
+    public List<String> getCastNames() {return castNames;}
+
+    public String getDirector() {return director;}
 }
 
