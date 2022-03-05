@@ -1,6 +1,5 @@
 package JustWho.controllers;
 
-import JustWho.dto.search.SearchResultDTO;
 import JustWho.services.IndexService;
 import JustWho.services.MovieCollectorService;
 import JustWho.util.MovieCollectorConfiguration;

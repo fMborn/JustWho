@@ -1,25 +1,31 @@
 package JustWho.dto.api;
 
-import JustWho.dto.index.Indexable;
-import JustWho.dto.search.SearchAggregationResultDTO;
-import JustWho.dto.search.SearchResultDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import JustWho.dto.search.response.SearchAggregationResultDTO;
+import JustWho.dto.search.response.SearchResultDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.micronaut.core.annotation.Introspected;
 
+import java.util.Collections;
 import java.util.List;
 
 public class SearchResponseDTO {
 
+    @JsonProperty
+    long hits;
+
     @JsonProperty("search_results")
-    List<SearchResultDTO> searchResultDTOS;
+    List<SearchResultDTO> searchResultDTOS = Collections.emptyList();
 
     @JsonProperty("aggregations")
-    List<SearchAggregationResultDTO> searchAggregationResultDTOS;
+    List<SearchAggregationResultDTO> searchAggregationResultDTOS = Collections.emptyList();
 
-    public SearchResponseDTO(List<SearchResultDTO> searchResultDTOS, List<SearchAggregationResultDTO> searchAggregationResultDTOS) {
+    public SearchResponseDTO(long hits, List<SearchResultDTO> searchResultDTOS, List<SearchAggregationResultDTO> searchAggregationResultDTOS) {
+        this.hits = hits;
         this.searchResultDTOS = searchResultDTOS;
         this.searchAggregationResultDTOS = searchAggregationResultDTOS;
+    }
+
+    public SearchResponseDTO() {
+
     }
 
 }

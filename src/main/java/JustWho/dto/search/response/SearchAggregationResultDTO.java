@@ -1,6 +1,5 @@
-package JustWho.dto.search;
+package JustWho.dto.search.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;

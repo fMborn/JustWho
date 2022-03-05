@@ -3,7 +3,10 @@ Content-Type: application/json
 
 {
   "settings": {
-    "number_of_shards": 1
+    "number_of_shards": 1,
+    "index": {
+      "refresh_interval": "90s"
+    }
   },
   "mappings": {
     "properties": {
@@ -22,7 +25,24 @@ Content-Type: application/json
 
 {
   "settings": {
-    "number_of_shards": 1
+    "number_of_shards": 1,
+    "analysis": {
+      "filter": {
+        "english_stop": {
+          "type":       "stop",
+          "stopwords":  "_english_"
+        }
+      },
+      "analyzer": {
+        "english_analyzer": {
+          "tokenizer":  "standard",
+          "filter": [
+            "lowercase",
+            "english_stop"
+          ]
+        }
+      }
+    }
   },
   "mappings": {
     "properties": {

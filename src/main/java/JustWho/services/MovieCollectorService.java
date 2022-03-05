@@ -6,7 +6,7 @@ import JustWho.dto.collector.GenreContainer;
 import JustWho.dto.collector.MovieDataContainer;
 import JustWho.dto.collector.SingleMovieData;
 import JustWho.dto.index.SearchDTO;
-import JustWho.dto.search.SearchResultDTO;
+import JustWho.dto.search.response.SearchResultDTO;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;

@@ -1,8 +1,11 @@
-package JustWho.dto.search;
+package JustWho.dto.search.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import javax.validation.constraints.DecimalMin;
+import java.util.Date;
 import java.util.List;
 
 public class SearchResultDTO {
@@ -56,5 +59,6 @@ public class SearchResultDTO {
     public List<String> getCastNames() {return castNames;}
 
     public String getDirector() {return director;}
+
 }
 

@@ -1,23 +1,30 @@
 package JustWho.services;
 
 import JustWho.dto.api.SearchResponseDTO;
-import JustWho.dto.search.*;
+import JustWho.dto.search.response.SearchAggregationBucketResultDTO;
+import JustWho.dto.search.response.SearchAggregationResultDTO;
+import JustWho.dto.search.response.SearchResultDTO;
+import JustWho.dto.search.response.SuggestResultDTO;
 import JustWho.util.Constants;
 import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
+import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
-import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
+import co.elastic.clients.elasticsearch._types.query_dsl.*;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.CompletionSuggestOption;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.core.search.Suggester;
 import co.elastic.clients.elasticsearch.core.search.Suggestion;
+
+import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Inject;
+import org.apache.lucene.queryparser.flexible.core.builders.QueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +37,14 @@ public class SearchService {
     @Inject
     ElasticsearchAsyncClient client;
 
-    public CompletableFuture<SearchResponseDTO> search() {
+    public CompletableFuture<SearchResponseDTO> search(
+            String input,
+            List<String> activeGenres,
+            @Nullable String startingYear,
+            @Nullable String stoppingYear,
+            @Nullable String minScore,
+            @Nullable String maxScore
+    ) {
         /*
         maybe interesting for many data points
                 “aggs”: {
@@ -43,34 +57,77 @@ public class SearchService {
         }
          */
 
-       final SearchRequest searchRequest = new SearchRequest.Builder()
-                .query(q -> q.matchAll(m -> m))
+        final SearchRequest.Builder searchRequest = new SearchRequest.Builder()
+                .query(buildBoolQuery(input, startingYear, stoppingYear))
                 .index(Constants.SEARCH_INDEX)
-                .size(0)
+                .size(20)
                 .aggregations(createAggregations())
-                .explain(false)
-                .build();
+                .explain(false);
 
-       final CompletableFuture<SearchResponse<SearchResultDTO>> searchResponseFuture = client.search(searchRequest, SearchResultDTO.class);
 
+        final var postFilters = buildPostFilters(activeGenres, minScore, maxScore);
+        if (!postFilters.isEmpty()) {
+            searchRequest.postFilter(f -> f.bool(b -> b.filter(postFilters)));
+        }
+
+        final long startTime = System.currentTimeMillis();
+        final CompletableFuture<SearchResponse<SearchResultDTO>> searchResponseFuture = client.search(searchRequest.build(), SearchResultDTO.class);
         return searchResponseFuture
-                .thenApply(this::parseResponse);
+                .thenApply(resp -> {
+                    LOGGER.info("Elastic took: " + (System.currentTimeMillis() - startTime) + "ms server time: " + resp.took() + "ms");
+                    return parseResponse(resp);
+                });
     }
+
+    private Query buildBoolQuery(String input, String startingYear, String stoppingYear) {
+
+        final var boolBuilder = new BoolQuery.Builder();
+
+        final var multiMatch = MultiMatchQuery.of(m -> m.query(input).fields(List.of("genres", "overview", "originalTitle")));
+        boolBuilder.must(m -> m.multiMatch(multiMatch));
+
+        if (startingYear != null || stoppingYear != null) {
+            boolBuilder.filter(f -> f.range(RangeQuery.of(t -> t.field("year").from(startingYear).to(stoppingYear))));
+        }
+
+        return new Query.Builder().bool(boolBuilder.build()).build();
+    }
+
+    private List<Query> buildPostFilters(List<String> activeGenres, String minScore, String maxScore) {
+        final List<Query> queries = new ArrayList<>();
+        final var genreFieldValues = activeGenres.stream().map(FieldValue::of).collect(Collectors.toList());
+
+        // vote average post filter
+        if (minScore != null || maxScore != null) {
+            queries.add(new Query.Builder().range(r -> r.field("voteAverage").from("3").to("9")).build());
+        }
+
+        // active genres post filter
+        if (!activeGenres.isEmpty()) {
+            queries.add( new Query.Builder().terms(t -> t.field("genres").terms(v -> v.value(genreFieldValues))).build());
+        }
+
+        return queries;
+
+    }
+
 
 
     private Map<String, Aggregation> createAggregations() {
         final Map<String, Aggregation> aggregationMap = new HashMap<>();
         // genre aggregations
-        aggregationMap.put("genres_aggs", Aggregation.of(a -> a.terms(t -> t.field("genres.keyword"))));
+        aggregationMap.put("genres_aggs", Aggregation.of(a -> a.terms(t -> t.field("genres"))));
 
         // year aggregations
-        final List<AggregationRange> aggregationRanges = List.of(
-                AggregationRange.of(ag -> ag.from("1900").to("1950")),
-                AggregationRange.of(ag -> ag.from("1950").to("1970")),
-                AggregationRange.of(ag -> ag.from("1970").to("1990")),
-                AggregationRange.of(ag -> ag.from("1990").to("2020"))
-        );
-        aggregationMap.put("year_aggs", Aggregation.of(a -> a.range(t -> t.field("year").ranges(aggregationRanges))));
+//        final List<AggregationRange> aggregationRanges = List.of(
+//                AggregationRange.of(ag -> ag.from("1900").to("1950")),
+//                AggregationRange.of(ag -> ag.from("1950").to("1970")),
+//                AggregationRange.of(ag -> ag.from("1970").to("1990")),
+//                AggregationRange.of(ag -> ag.from("1990").to("2020"))
+//        );
+//        aggregationMap.put("year_aggs", Aggregation.of(a -> a.range(t -> t.field("year").ranges(aggregationRanges))));
+
+        aggregationMap.put("year_aggs", Aggregation.of(a -> a.variableWidthHistogram(v -> v.field("year").buckets(6))));
 
         return aggregationMap;
     }
@@ -85,7 +142,7 @@ public class SearchService {
                 .stream().map(entry -> new SearchAggregationResultDTO(entry.getKey(), parseAggregations(entry.getValue())))
                 .collect(Collectors.toList());
 
-        return new SearchResponseDTO(searchResults, aggregationResults);
+        return new SearchResponseDTO(searchResponse.hits().total().value(), searchResults, aggregationResults);
     }
     public List<SearchAggregationBucketResultDTO> parseAggregations(Aggregate aggregate) {
         if (aggregate.isSterms()){
@@ -97,6 +154,11 @@ public class SearchService {
             return aggregate.range()
                     .buckets().array()
                     .stream().map(bucket -> new SearchAggregationBucketResultDTO(bucket.key(), bucket.docCount()))
+                    .collect(Collectors.toList());
+        } else if (aggregate.isVariableWidthHistogram()) {
+            return aggregate.variableWidthHistogram()
+                    .buckets().array()
+                    .stream().map(bucket -> new SearchAggregationBucketResultDTO(bucket.min(), bucket.max(), bucket.docCount()))
                     .collect(Collectors.toList());
         } else {
             return List.of();

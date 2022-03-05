@@ -1,7 +1,7 @@
 package JustWho.dto.index;
 
 import JustWho.dto.collector.SingleMovieData;
-import JustWho.dto.search.SearchResultDTO;
+import JustWho.dto.search.response.SearchResultDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Introspected;

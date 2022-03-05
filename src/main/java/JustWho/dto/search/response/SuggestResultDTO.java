@@ -1,4 +1,4 @@
-package JustWho.dto.search;
+package JustWho.dto.search.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

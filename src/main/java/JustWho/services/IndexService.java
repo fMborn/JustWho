@@ -4,7 +4,7 @@ import JustWho.dto.collector.CreditsContainer;
 import JustWho.dto.index.Indexable;
 import JustWho.dto.index.SearchDTO;
 import JustWho.dto.index.SuggestDTO;
-import JustWho.dto.search.SearchResultDTO;
+import JustWho.dto.search.response.SearchResultDTO;
 import JustWho.util.Constants;
 import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
 import co.elastic.clients.elasticsearch.core.BulkResponse;
@@ -13,7 +13,6 @@ import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import co.elastic.clients.elasticsearch.core.bulk.BulkResponseItem;
 import co.elastic.clients.elasticsearch.core.search.Hit;
-import co.elastic.clients.transport.ElasticsearchTransport;
 import io.netty.util.internal.StringUtil;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
@@ -29,8 +28,6 @@ import static java.util.stream.Collectors.toList;
 public class IndexService {
     private static final Logger LOGGER = LoggerFactory.getLogger(IndexService.class);
 
-    @Inject
-    ElasticsearchTransport elasticsearchTransport;
     @Inject
     ElasticsearchAsyncClient elasticsearchAsyncClient;
     @Inject
