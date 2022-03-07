@@ -1,13 +1,12 @@
 package JustWho.dto.search.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import javax.validation.constraints.DecimalMin;
-import java.util.Date;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchResultDTO {
 
     @JsonProperty("title")
@@ -31,10 +30,14 @@ public class SearchResultDTO {
     private String originalLanguage;
     @JsonProperty("year")
     private Integer year;
+    @JsonProperty("cast")
+    private List<String> cast;
     @JsonProperty("castNames")
     private List<String> castNames;
     @JsonProperty("director")
     private String director;
+    @JsonProperty("directorName")
+    private String directorNames;
 
     public String getTitle() {return title;}
 
@@ -58,7 +61,7 @@ public class SearchResultDTO {
 
     public List<String> getCastNames() {return castNames;}
 
-    public String getDirector() {return director;}
+    public String getDirectorNames() {return directorNames;}
 
 }
 
