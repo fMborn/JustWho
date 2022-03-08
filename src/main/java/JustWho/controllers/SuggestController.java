@@ -18,7 +18,7 @@ public class SuggestController {
     SearchService searchService;
 
     @Get(produces = MediaType.APPLICATION_JSON)
-    public CompletableFuture<List<SuggestResultDTO>>  suggest( @QueryValue String input) throws Exception{
+    public CompletableFuture<List<SuggestResultDTO>> suggest( @QueryValue String input) {
 
         if (!input.isEmpty()) {
             return searchService.suggest(input);

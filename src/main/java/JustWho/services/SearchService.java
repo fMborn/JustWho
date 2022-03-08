@@ -170,11 +170,11 @@ public class SearchService {
     public CompletableFuture<List<SuggestResultDTO>> suggest(final String input) {
         final String suggestKey = "name_suggestions";
         final Suggester suggester = Suggester.of(builder -> builder.text(input)
-                .suggesters(suggestKey, s -> s.completion(c -> c.field("suggest_name").skipDuplicates(true))));
+                .suggesters(suggestKey, s -> s.completion(c -> c.field("suggestTitle").skipDuplicates(true))));
 
         final SearchRequest searchRequest = new SearchRequest.Builder()
                 .suggest(suggester)
-                .source(sb -> sb.filter(sf -> sf.excludes("suggest_name")))
+                .source(sb -> sb.filter(sf -> sf.excludes("suggestTitle")))
                 .size(7)
                 .index(Constants.SUGGEST_INDEX)
                 .explain(false)

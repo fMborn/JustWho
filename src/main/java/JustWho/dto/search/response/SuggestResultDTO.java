@@ -8,10 +8,10 @@ import java.util.List;
 public class SuggestResultDTO {
 
     @JsonProperty
-    String name;
+    String title;
     @JsonProperty
     int year;
-    @JsonProperty("suggest_name")
-    List<String> suggestName;
+    @JsonProperty
+    String posterPath;
 
 }

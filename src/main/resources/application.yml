@@ -13,6 +13,13 @@ micronaut:
         http-method: GET
         access:
           - isAnonymous()
+  server:
+    cors:
+      enabled: true
+      configurations:
+        web:
+          allowedOrigins:
+            - http://localhost:3000
 netty:
   default:
     allocator:
