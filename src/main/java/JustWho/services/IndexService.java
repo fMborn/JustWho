@@ -22,6 +22,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -75,7 +77,7 @@ public class IndexService {
     // to test functionality first function returns the default 10 search results
     public Flux<List<String>> indexCastAndCrew() {
         final Flux<Hit<SearchResultDTO>> searchResult = scrollSearchResults();
-        final Flux<CreditsContainer> creditsResult = searchResult.flatMap(x -> movieCollectorService.fetchCredits(x));
+        final Flux<CreditsContainer> creditsResult = searchResult.buffer(10).flatMap(x -> Flux.fromStream(x.stream().map(y -> movieCollectorService.fetchCredits(y))).flatMap(Function.identity()));
 
         // TODO think about intellij warning, can it really be null?
         final Flux<SearchDTO> zippedResults = Flux.zip(searchResult, creditsResult, (fromIndex, credits) -> SearchDTO.ofResult(fromIndex.source(), fromIndex.id(), credits.getTopCastName(), credits.getDirectorName()))
@@ -87,14 +89,14 @@ public class IndexService {
     }
 
     private Flux<Hit<SearchResultDTO>> scrollSearchResults() {
-        final SearchRequest searchRequest = new SearchRequest.Builder()
-            .query(q -> q.matchAll(m -> m))
+        Flux<SearchRequest> searchRequests = Flux.range(1900,122).map(x -> new SearchRequest.Builder()
+            .query(q -> q.range(y -> y.field("year").from(String.valueOf(x)).to(String.valueOf(x+1))))
+            .size(10000)
             .index(Constants.SEARCH_INDEX)
-            .build();
+            .build());
 
-        final CompletableFuture<SearchResponse<SearchResultDTO>> responseFuture = elasticsearchAsyncClient.search(searchRequest, SearchResultDTO.class);
+        Flux<SearchResponse<SearchResultDTO>> responses = searchRequests.flatMap(searchRequest -> Mono.fromFuture(elasticsearchAsyncClient.search(searchRequest, SearchResultDTO.class)));
 
-        return Mono.fromFuture(responseFuture)
-                   .flatMapMany(response -> Flux.fromIterable(response.hits().hits()));
+        return responses.flatMap(response -> Flux.fromIterable(response.hits().hits()));
     }
 }
