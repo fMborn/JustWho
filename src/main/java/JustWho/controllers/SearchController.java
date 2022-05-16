@@ -7,14 +7,10 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.QueryValue;
-import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.rules.SecurityRule;
 import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -38,7 +34,14 @@ public class SearchController {
     ) {
 
         List<String> sanitizedActiveGenres = activeGenres != null ? activeGenres: Collections.emptyList();
-        if (input.length() > 3) {
+        if (input.length() >= 2) {
+            LOGGER.info("Searching with parameters: "
+                    + "query: " + input
+                    + ", active genres: "+ activeGenres
+                    + ", startingYear: " + startingYear
+                    + ", stoppingYear: "+ stoppingYear
+                    + ", minScore: " + minScore
+                    + ", maxScore: " + maxScore);
             return searchService.search(
                     input,
                     sanitizedActiveGenres,

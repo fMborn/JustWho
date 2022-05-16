@@ -12,7 +12,7 @@ public class SearchResponseDTO {
     @JsonProperty
     long hits;
 
-    @JsonProperty("search_results")
+    @JsonProperty("searchResults")
     List<SearchResultDTO> searchResultDTOS = Collections.emptyList();
 
     @JsonProperty("aggregations")

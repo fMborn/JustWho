@@ -83,7 +83,7 @@ public class SearchService {
 
         final var boolBuilder = new BoolQuery.Builder();
 
-        final var multiMatch = MultiMatchQuery.of(m -> m.query(input).fields(List.of("genres", "overview", "originalTitle")));
+        final var multiMatch = MultiMatchQuery.of(m -> m.query(input).fields(List.of("genres", "overview", "originalTitle", "title")));
         boolBuilder.must(m -> m.multiMatch(multiMatch));
 
         if (startingYear != null || stoppingYear != null) {
@@ -116,7 +116,7 @@ public class SearchService {
     private Map<String, Aggregation> createAggregations() {
         final Map<String, Aggregation> aggregationMap = new HashMap<>();
         // genre aggregations
-        aggregationMap.put("genres_aggs", Aggregation.of(a -> a.terms(t -> t.field("genres"))));
+        aggregationMap.put("Genres", Aggregation.of(a -> a.terms(t -> t.field("genres"))));
 
         // year aggregations
 //        final List<AggregationRange> aggregationRanges = List.of(
@@ -127,7 +127,7 @@ public class SearchService {
 //        );
 //        aggregationMap.put("year_aggs", Aggregation.of(a -> a.range(t -> t.field("year").ranges(aggregationRanges))));
 
-        aggregationMap.put("year_aggs", Aggregation.of(a -> a.variableWidthHistogram(v -> v.field("year").buckets(6))));
+        aggregationMap.put("Years", Aggregation.of(a -> a.variableWidthHistogram(v -> v.field("year").buckets(6))));
 
         return aggregationMap;
     }

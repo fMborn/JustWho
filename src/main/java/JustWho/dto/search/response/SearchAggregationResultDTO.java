@@ -6,10 +6,10 @@ import java.util.List;
 
 public class SearchAggregationResultDTO {
 
-    @JsonProperty("aggregation_name")
+    @JsonProperty("aggregationName")
     final String aggregationName;
 
-    @JsonProperty("aggregation_values")
+    @JsonProperty("aggregationValues")
     final List<SearchAggregationBucketResultDTO> aggregationBucketResultDTOS;
 
     public SearchAggregationResultDTO(String aggregationName, List<SearchAggregationBucketResultDTO> aggregationBucketResultDTOS) {
